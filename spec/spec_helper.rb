@@ -16,6 +16,13 @@ if ENV["COVERAGE"] == "true"
 end
 
 require "minehunter"
+require "stringio"
+
+class StringIO
+  def wait_readable(*)
+    true
+  end
+end
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"
