@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.0.0"
 
   spec.add_dependency "pastel", "~> 0.8"
+  spec.add_dependency "tty-box", "~> 0.7"
   spec.add_dependency "tty-cursor", "~> 0.7"
   spec.add_dependency "tty-reader", "~> 0.9"
 

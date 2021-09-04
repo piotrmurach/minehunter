@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "tty-box"
 require "tty-cursor"
 require "tty-reader"
 
@@ -39,8 +40,10 @@ module Minehunter
                    width: nil, height: nil, mines_limit: nil,
                    decorator: DEFAULT_DECORATOR, randomiser: DEFAULT_RANDOMISER)
       @output = output
+      @width = width
       @decorator = decorator
       @randomiser = randomiser
+      @box = TTY::Box
       @cursor = TTY::Cursor
       @reader = TTY::Reader.new(input: input, output: output, env: env,
                                 interrupt: :exit)
@@ -78,12 +81,43 @@ module Minehunter
       @reader.subscribe(self)
 
       until @stop
-        @output.print cursor.move_to(0, 0) + cursor.clear_line + status +
-                      cursor.move_to(0, 1) + render_grid
+        @output.print cursor.move_to(0, 0) + cursor.clear_line +
+                      render_status_box +
+                      cursor.move_to(0, 2) + render_grid_box
         @reader.read_keypress
       end
     ensure
       @output.print cursor.show
+    end
+
+    # Render box with status message
+    #
+    # @return [String]
+    #
+    # @api private
+    def render_status_box
+      @box.frame(
+        status,
+        width: @width + 4,
+        padding: [0, 1],
+        border: {bottom: false}
+      )
+    end
+
+    # Render box with grid
+    #
+    # @return [String]
+    #
+    # @api private
+    def render_grid_box
+      @box.frame(
+        render_grid,
+        padding: [0, 1],
+        border: {
+          top_left: :divider_right,
+          top_right: :divider_left
+        }
+      )
     end
 
     # Status message
