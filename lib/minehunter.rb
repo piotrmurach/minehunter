@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "pastel"
+require "tty-screen"
 
 require_relative "minehunter/game"
 require_relative "minehunter/version"
@@ -22,6 +23,9 @@ module Minehunter
   # @api public
   def self.run
     decorator = Pastel.new.method(:decorate)
-    Game.new(width: 9, height: 9, mines_limit: 10, decorator: decorator).run
+    Game.new(width: 9, height: 9, mines_limit: 10,
+             screen_width: TTY::Screen.width,
+             screen_height: TTY::Screen.height,
+             decorator: decorator).run
   end
 end # Minehunter

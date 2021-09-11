@@ -30,6 +30,10 @@ module Minehunter
     #   the number of rows
     # @param [Integer] mines_limit
     #   the total number of mines
+    # @param [Integer] screen_width
+    #   the terminal screen width
+    # @param [Integer] screen_height
+    #   the terminal screen height
     # @param [Pastel] decorator
     #   the decorator for styling
     # @param [Proc] randomiser
@@ -38,9 +42,12 @@ module Minehunter
     # @api public
     def initialize(input: $stdin, output: $stdout, env: {},
                    width: nil, height: nil, mines_limit: nil,
+                   screen_width: nil, screen_height: nil,
                    decorator: DEFAULT_DECORATOR, randomiser: DEFAULT_RANDOMISER)
       @output = output
       @width = width
+      @top = (screen_height - height - 4) / 2
+      @left = (screen_width - width - 4) / 2
       @decorator = decorator
       @randomiser = randomiser
       @box = TTY::Box
@@ -98,6 +105,8 @@ module Minehunter
     def render_status_box
       @box.frame(
         status,
+        top: @top,
+        left: @left,
         width: @width + 4,
         padding: [0, 1],
         border: {bottom: false}
@@ -112,6 +121,8 @@ module Minehunter
     def render_grid_box
       @box.frame(
         render_grid,
+        top: @top + 2,
+        left: @left,
         padding: [0, 1],
         border: {
           top_left: :divider_right,

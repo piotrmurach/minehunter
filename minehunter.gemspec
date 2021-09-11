@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "tty-box", "~> 0.7"
   spec.add_dependency "tty-cursor", "~> 0.7"
   spec.add_dependency "tty-reader", "~> 0.9"
+  spec.add_dependency "tty-screen", "~> 0.8"
 
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", ">= 3.0"
