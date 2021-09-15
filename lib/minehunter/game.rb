@@ -5,12 +5,18 @@ require "tty-cursor"
 require "tty-reader"
 
 require_relative "grid"
+require_relative "intro"
 
 module Minehunter
   # Responsible for playing mine hunting game
   #
   # @api public
   class Game
+    # The keys to exit game
+    #
+    # @api private
+    EXIT_KEYS = [?\C-x, "q"].freeze
+
     # The terminal cursor clearing and positioning
     #
     # @api public
@@ -55,6 +61,10 @@ module Minehunter
       @reader = TTY::Reader.new(input: input, output: output, env: env,
                                 interrupt: :exit)
       @grid = Grid.new(width: width, height: height, mines_limit: mines_limit)
+      @intro = Intro
+      @intro_top = (screen_height - @intro.height - 2) / 2
+      @intro_left = (screen_width - @intro.width - 4) / 2
+
       reset
     end
 
@@ -83,7 +93,10 @@ module Minehunter
     #
     # @api public
     def run
-      @output.print cursor.hide
+      @output.print cursor.hide + cursor.clear_screen + render_intro_box
+      pressed_key = @reader.read_keypress
+      keyctrl_x if EXIT_KEYS.include?(pressed_key)
+
       @output.print cursor.clear_screen
       @reader.subscribe(self)
 
@@ -95,6 +108,20 @@ module Minehunter
       end
     ensure
       @output.print cursor.show
+    end
+
+    # Render box with intro
+    #
+    # @return [String]
+    #
+    # @api private
+    def render_intro_box
+      @box.frame(
+        @intro.render,
+        top: @intro_top,
+        left: @intro_left,
+        padding: [0, 1]
+      )
     end
 
     # Render box with status message

@@ -7,14 +7,32 @@ RSpec.describe Minehunter::CLI do
 
   it "prints a game on a 7x4 grid with 5 mines and quits" do
     cli = described_class.new
-    input << "q"
+    input << "\n" << "q"
     input.rewind
 
     cli.run(%w[-c 7 -r 4 -m 5], input: input, output: output, color: true,
                                 env: env, screen_width: 40, screen_height: 20)
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J",
+      "\e[3;7H┌─────────────────────────┐",
+      "\e[4;7H│  ,-*                    \e[4;33H│",
+      "\e[5;7H│ (_) Minehunter          \e[5;33H│",
+      "\e[6;7H│                         \e[6;33H│",
+      "\e[7;7H│ Movement:               \e[7;33H│",
+      "\e[8;7H│      [↑]        [w]     \e[8;33H│",
+      "\e[9;7H│   [←][↓][→]  [a][s][d]  \e[9;33H│",
+      "\e[10;7H│                         \e[10;33H│",
+      "\e[11;7H│ Actions:                \e[11;33H│",
+      "\e[12;7H│   f - toggle flag       \e[12;33H│",
+      "\e[13;7H│   space - uncover field \e[13;33H│",
+      "\e[14;7H│   r - restart game      \e[14;33H│",
+      "\e[15;7H│   q - quit game         \e[15;33H│",
+      "\e[16;7H│                         \e[16;33H│",
+      "\e[17;7H│ Press any key to start! \e[17;33H│",
+      "\e[18;7H└─────────────────────────┘",
+
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[7;15H┌─────────┐",
       "\e[8;15H│ Flags 5 \e[8;25H│\e[3;1H",
       "\e[9;15H├─────────┤",

@@ -6,19 +6,40 @@ RSpec.describe Minehunter::Game do
   let(:env) { {"TTY_TEST" => true} }
   let(:pastel) { Pastel.new(enabled: true) }
   let(:decorator) { pastel.method(:decorate) }
+  let(:intro) {
+    [
+      "\e[3;7H┌─────────────────────────┐",
+      "\e[4;7H│  ,-*                    \e[4;33H│",
+      "\e[5;7H│ (_) Minehunter          \e[5;33H│",
+      "\e[6;7H│                         \e[6;33H│",
+      "\e[7;7H│ Movement:               \e[7;33H│",
+      "\e[8;7H│      [↑]        [w]     \e[8;33H│",
+      "\e[9;7H│   [←][↓][→]  [a][s][d]  \e[9;33H│",
+      "\e[10;7H│                         \e[10;33H│",
+      "\e[11;7H│ Actions:                \e[11;33H│",
+      "\e[12;7H│   f - toggle flag       \e[12;33H│",
+      "\e[13;7H│   space - uncover field \e[13;33H│",
+      "\e[14;7H│   r - restart game      \e[14;33H│",
+      "\e[15;7H│   q - quit game         \e[15;33H│",
+      "\e[16;7H│                         \e[16;33H│",
+      "\e[17;7H│ Press any key to start! \e[17;33H│",
+      "\e[18;7H└─────────────────────────┘"
+    ].join
+  }
 
   it "quits game immediately with 'q' key" do
     game = described_class.new(width: 10, height: 5, mines_limit: 10,
                                screen_width: 40, screen_height: 20,
                                input: input, output: output, env: env,
                                decorator: decorator)
-    input << "q"
+    input << "\n" << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 10   \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -37,13 +58,14 @@ RSpec.describe Minehunter::Game do
                                screen_width: 40, screen_height: 20,
                                input: input, output: output, env: env,
                                decorator: decorator)
-    input << "f" << ?\C-x
+    input << "\n" << "f" << ?\C-x
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 10   \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -77,13 +99,14 @@ RSpec.describe Minehunter::Game do
                                input: input, output: output, env: env,
                                decorator: decorator, randomiser: randomiser)
 
-    input << " " << "q"
+    input << "\n" << " " << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 3    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -116,13 +139,14 @@ RSpec.describe Minehunter::Game do
                                input: input, output: output, env: env,
                                decorator: decorator)
 
-    input << "\n" << "q"
+    input << "\n" << "\n" << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 0    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -156,13 +180,14 @@ RSpec.describe Minehunter::Game do
                                input: input, output: output, env: env,
                                decorator: decorator, randomiser: randomiser)
 
-    input << " " << "l" << " " << "q"
+    input << "\n" << " " << "l" << " " << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 1    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -217,13 +242,14 @@ RSpec.describe Minehunter::Game do
                                screen_width: 40, screen_height: 20,
                                input: input, output: output, env: env,
                                decorator: decorator)
-    input << "g" << " " << "q"
+    input << "\n" << "g" << " " << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 10   \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
@@ -272,13 +298,14 @@ RSpec.describe Minehunter::Game do
                                    screen_width: 40, screen_height: 20,
                                    input: input, output: output, env: env,
                                    decorator: decorator)
-        input << input_sequence << "q"
+        input << "\n" << input_sequence << "q"
         input.rewind
 
         game.run
 
         expect(output.string.inspect).to eq([
-          "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+          "\e[?25l\e[2J#{intro}",
+          "\e[2J\e[1;1H\e[2K\e[1G",
           "\e[6;14H┌────────────┐",
           "\e[7;14H│ Flags 10   \e[7;27H│\e[3;1H",
           "\e[8;14H├────────────┤",
@@ -348,13 +375,14 @@ RSpec.describe Minehunter::Game do
                                input: input, output: output, env: env,
                                decorator: decorator)
 
-    input << "f" << "r" << "q"
+    input << "\n" << "f" << "r" << "q"
     input.rewind
 
     game.run
 
     expect(output.string.inspect).to eq([
-      "\e[?25l\e[2J\e[1;1H\e[2K\e[1G",
+      "\e[?25l\e[2J#{intro}",
+      "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ Flags 10   \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
