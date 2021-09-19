@@ -82,6 +82,15 @@ RSpec.describe Minehunter::Grid do
       expect(grid.field_at(0, 0).mine?).to eq(false)
     end
 
+    it "fills the last grid column and row with mines" do
+      grid = described_class.new(width: 3, height: 3, mines_limit: 8)
+      expect(grid.mines.size).to eq(0)
+
+      grid.fill_with_mines(0, 0)
+
+      expect(grid.mines.size).to eq(8)
+    end
+
     it "uses custom random number generator" do
       grid = described_class.new(width: 10, height: 10, mines_limit: 3)
       seed = [1, 1, 2, 2, 3, 3].to_enum

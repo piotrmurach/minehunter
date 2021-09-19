@@ -192,8 +192,8 @@ module Minehunter
     def fill_with_mines(x, y, randomiser: DEFAULT_RANDOMISER)
       limit = @mines_limit
       while limit > 0
-        mine_x = randomiser[@width - 1]
-        mine_y = randomiser[@height - 1]
+        mine_x = randomiser[@width]
+        mine_y = randomiser[@height]
         next if mine_x == x && mine_y == y
 
         field = field_at(mine_x, mine_y)
