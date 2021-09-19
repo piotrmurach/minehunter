@@ -179,7 +179,7 @@ module Minehunter
       field_at(x, y).flag?
     end
 
-    # Fill grid with mines skipping the current position
+    # Fill grid with mines skipping the current position and nearby fields
     #
     # @param [Integer] x
     #   the x coordinate
@@ -195,6 +195,7 @@ module Minehunter
         mine_x = randomiser[@width]
         mine_y = randomiser[@height]
         next if mine_x == x && mine_y == y
+        next if fields_next_to(x, y).include?([mine_x, mine_y])
 
         field = field_at(mine_x, mine_y)
         next if field.mine?

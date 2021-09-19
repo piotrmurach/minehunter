@@ -83,24 +83,35 @@ RSpec.describe Minehunter::Grid do
     end
 
     it "fills the last grid column and row with mines" do
-      grid = described_class.new(width: 3, height: 3, mines_limit: 8)
+      grid = described_class.new(width: 3, height: 3, mines_limit: 5)
       expect(grid.mines.size).to eq(0)
 
       grid.fill_with_mines(0, 0)
 
-      expect(grid.mines.size).to eq(8)
+      expect(grid.mines.size).to eq(5)
+    end
+
+    it "doesn't fill fields next to the current position with mines" do
+      grid = described_class.new(width: 3, height: 3, mines_limit: 5)
+
+      grid.fill_with_mines(0, 0)
+
+      expect(grid.mines).to eq([
+        grid.field_at(2, 0), grid.field_at(2, 1), grid.field_at(0, 2),
+        grid.field_at(1, 2), grid.field_at(2, 2)
+      ])
     end
 
     it "uses custom random number generator" do
       grid = described_class.new(width: 10, height: 10, mines_limit: 3)
-      seed = [1, 1, 2, 2, 3, 3].to_enum
+      seed = [2, 2, 3, 3, 4, 4].to_enum
       randomiser = ->(_) { seed.next }
 
       grid.fill_with_mines(0, 0, randomiser: randomiser)
 
-      expect(grid.mines).to eq([grid.field_at(1, 1),
-                                grid.field_at(2, 2),
-                                grid.field_at(3, 3)])
+      expect(grid.mines).to eq([
+        grid.field_at(2, 2), grid.field_at(3, 3), grid.field_at(4, 4)
+      ])
     end
 
     it "doesn't place more mines than available fields" do

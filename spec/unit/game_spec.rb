@@ -173,14 +173,14 @@ RSpec.describe Minehunter::Game do
   end
 
   it "uncovers a field with a mine and loses the game" do
-    seed = [1, 0].to_enum
+    seed = [0, 2, 2, 0].to_enum
     randomiser = ->(_val) { seed.next }
-    game = described_class.new(width: 10, height: 5, mines_limit: 1,
+    game = described_class.new(width: 10, height: 5, mines_limit: 2,
                                screen_width: 40, screen_height: 20,
                                input: input, output: output, env: env,
                                decorator: decorator, randomiser: randomiser)
 
-    input << "\n" << " " << "l" << " " << "q"
+    input << "\n" << " " << "l" << "l" << " " << "q"
     input.rewind
 
     game.run
@@ -189,7 +189,7 @@ RSpec.describe Minehunter::Game do
       "\e[?25l\e[2J#{intro}",
       "\e[2J\e[1;1H\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
-      "\e[7;14H│ Flags 1    \e[7;27H│\e[3;1H",
+      "\e[7;14H│ Flags 2    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
       "\e[9;14H│ \e[42m░\e[0m░░░░░░░░░ \e[9;27H│",
       "\e[10;14H│ ░░░░░░░░░░ \e[10;27H│",
@@ -201,10 +201,10 @@ RSpec.describe Minehunter::Game do
 
       "\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
-      "\e[7;14H│ Flags 1    \e[7;27H│\e[3;1H",
+      "\e[7;14H│ Flags 2    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
-      "\e[9;14H│ \e[42m\e[36m1\e[0m\e[0m░░░░░░░░░ \e[9;27H│",
-      "\e[10;14H│ ░░░░░░░░░░ \e[10;27H│",
+      "\e[9;14H│ \e[42m \e[0m\e[36m1\e[0m░░░░░░░░ \e[9;27H│",
+      "\e[10;14H│ \e[36m1\e[0m\e[32m2\e[0m░░░░░░░░ \e[10;27H│",
       "\e[11;14H│ ░░░░░░░░░░ \e[11;27H│",
       "\e[12;14H│ ░░░░░░░░░░ \e[12;27H│",
       "\e[13;14H│ ░░░░░░░░░░ \e[13;27H│",
@@ -213,10 +213,22 @@ RSpec.describe Minehunter::Game do
 
       "\e[2K\e[1G",
       "\e[6;14H┌────────────┐",
-      "\e[7;14H│ Flags 1    \e[7;27H│\e[3;1H",
+      "\e[7;14H│ Flags 2    \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
-      "\e[9;14H│ \e[36m1\e[0m\e[42m░\e[0m░░░░░░░░ \e[9;27H│",
-      "\e[10;14H│ ░░░░░░░░░░ \e[10;27H│",
+      "\e[9;14H│  \e[42m\e[36m1\e[0m\e[0m░░░░░░░░ \e[9;27H│",
+      "\e[10;14H│ \e[36m1\e[0m\e[32m2\e[0m░░░░░░░░ \e[10;27H│",
+      "\e[11;14H│ ░░░░░░░░░░ \e[11;27H│",
+      "\e[12;14H│ ░░░░░░░░░░ \e[12;27H│",
+      "\e[13;14H│ ░░░░░░░░░░ \e[13;27H│",
+      "\e[14;14H└────────────┘",
+      "\e[1;1H",
+
+      "\e[2K\e[1G",
+      "\e[6;14H┌────────────┐",
+      "\e[7;14H│ Flags 2    \e[7;27H│\e[3;1H",
+      "\e[8;14H├────────────┤",
+      "\e[9;14H│  \e[36m1\e[0m\e[42m░\e[0m░░░░░░░ \e[9;27H│",
+      "\e[10;14H│ \e[36m1\e[0m\e[32m2\e[0m░░░░░░░░ \e[10;27H│",
       "\e[11;14H│ ░░░░░░░░░░ \e[11;27H│",
       "\e[12;14H│ ░░░░░░░░░░ \e[12;27H│",
       "\e[13;14H│ ░░░░░░░░░░ \e[13;27H│",
@@ -227,9 +239,9 @@ RSpec.describe Minehunter::Game do
       "\e[6;14H┌────────────┐",
       "\e[7;14H│ GAME OVER  \e[7;27H│\e[3;1H",
       "\e[8;14H├────────────┤",
-      "\e[9;14H│ \e[36m1\e[0m\e[41m*\e[0m░░░░░░░░ \e[9;27H│",
-      "\e[10;14H│ ░░░░░░░░░░ \e[10;27H│",
-      "\e[11;14H│ ░░░░░░░░░░ \e[11;27H│",
+      "\e[9;14H│  \e[36m1\e[0m\e[41m*\e[0m░░░░░░░ \e[9;27H│",
+      "\e[10;14H│ \e[36m1\e[0m\e[32m2\e[0m░░░░░░░░ \e[10;27H│",
+      "\e[11;14H│ *░░░░░░░░░ \e[11;27H│",
       "\e[12;14H│ ░░░░░░░░░░ \e[12;27H│",
       "\e[13;14H│ ░░░░░░░░░░ \e[13;27H│",
       "\e[14;14H└────────────┘",
