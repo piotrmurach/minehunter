@@ -54,6 +54,8 @@ module Minehunter
       @width = width
       @top = (screen_height - height - 4) / 2
       @left = (screen_width - width - 4) / 2
+      @pos_x = (width - 1) / 2
+      @pos_y = (height - 1) / 2
       @decorator = decorator
       @randomiser = randomiser
       @box = TTY::Box
@@ -72,8 +74,8 @@ module Minehunter
     #
     # @api public
     def reset
-      @curr_x = 0
-      @curr_y = 0
+      @curr_x = @pos_x
+      @curr_y = @pos_y
       @first_uncover = true
       @lost = false
       @stop = false
