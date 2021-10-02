@@ -222,6 +222,40 @@ RSpec.describe Minehunter::Grid do
     end
   end
 
+  context "#count_flags_next_to" do
+    it "counts no flags in nearby fields" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 3)
+
+      expect(grid.count_flags_next_to(1, 1)).to eq(0)
+    end
+
+    it "counts four flags in nearby fields" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 4)
+
+      grid.flag(0, 0)
+      grid.flag(0, 2)
+      grid.flag(2, 0)
+      grid.flag(2, 2)
+
+      expect(grid.count_flags_next_to(1, 1)).to eq(4)
+    end
+
+    it "counts the maximum number of flags in nearby fields" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 10)
+
+      grid.flag(0, 0)
+      grid.flag(0, 1)
+      grid.flag(0, 2)
+      grid.flag(1, 0)
+      grid.flag(1, 2)
+      grid.flag(2, 0)
+      grid.flag(2, 1)
+      grid.flag(2, 2)
+
+      expect(grid.count_flags_next_to(1, 1)).to eq(8)
+    end
+  end
+
   context "#uncover" do
     it "uncovers an empty field with three nearby mines" do
       grid = described_class.new(width: 10, height: 5, mines_limit: 10)
@@ -362,6 +396,116 @@ RSpec.describe Minehunter::Grid do
         "  112F░░░░\n",
         "112░░░░░░░\n",
         "░░░F░░░░░░\n"
+      ].join)
+    end
+  end
+
+  context "#uncover_around" do
+    it "doesn't uncover fields around numbered field mismatching flags count" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 4)
+
+      grid.mine(1, 3)
+      grid.mine(2, 1)
+      grid.mine(3, 2)
+      grid.mine(3, 3)
+
+      grid.flag(2, 1)
+      grid.flag(3, 2)
+      grid.flag(3, 3)
+
+      grid.uncover(2, 2)
+      expect(grid.uncover(2, 2)).to eq(false)
+
+      expect(grid.unmined_fields_remaining).to eq(45)
+      expect(grid.flags_remaining).to eq(1)
+      expect(grid.cleared?).to eq(false)
+      expect(grid.render(2, 2)).to eq([
+        "░░░░░░░░░░\n",
+        "░░F░░░░░░░\n",
+        "░░4F░░░░░░\n",
+        "░░░F░░░░░░\n",
+        "░░░░░░░░░░\n"
+      ].join)
+    end
+
+    it "uncovers fields around numbered field matching flags count" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 4)
+
+      grid.mine(1, 3)
+      grid.mine(2, 1)
+      grid.mine(3, 2)
+      grid.mine(3, 3)
+
+      grid.flag(1, 3)
+      grid.flag(2, 1)
+      grid.flag(3, 2)
+      grid.flag(3, 3)
+
+      grid.uncover(2, 2)
+      expect(grid.uncover(2, 2)).to eq(false)
+
+      expect(grid.unmined_fields_remaining).to eq(41)
+      expect(grid.flags_remaining).to eq(0)
+      expect(grid.cleared?).to eq(false)
+      expect(grid.render(2, 2)).to eq([
+        "░░░░░░░░░░\n",
+        "░1F2░░░░░░\n",
+        "░24F░░░░░░\n",
+        "░F3F░░░░░░\n",
+        "░░░░░░░░░░\n"
+      ].join)
+    end
+
+    it "uncovers empty fields around numbered field matching flags count" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 3)
+
+      grid.mine(1, 4)
+      grid.mine(3, 1)
+      grid.mine(3, 3)
+
+      grid.flag(3, 1)
+      grid.flag(3, 3)
+
+      grid.uncover(2, 2)
+      expect(grid.uncover(2, 2)).to eq(false)
+
+      expect(grid.unmined_fields_remaining).to eq(34)
+      expect(grid.flags_remaining).to eq(1)
+      expect(grid.cleared?).to eq(false)
+      expect(grid.render(2, 2)).to eq([
+        "  1░░░░░░░\n",
+        "  1F░░░░░░\n",
+        "  22░░░░░░\n",
+        "112F░░░░░░\n",
+        "░░░░░░░░░░\n"
+      ].join)
+    end
+
+    it "uncovers mine around a numbered field with a wrongly placed flag" do
+      grid = described_class.new(width: 10, height: 5, mines_limit: 4)
+
+      grid.mine(1, 3)
+      grid.mine(2, 1)
+      grid.mine(3, 2)
+      grid.mine(3, 3)
+
+      grid.flag(1, 1)
+      grid.flag(2, 1)
+      grid.flag(3, 2)
+      grid.flag(3, 3)
+
+      grid.uncover(2, 2)
+      expect(grid.uncover(2, 2)).to eq(true)
+
+      expect(grid.unmined_fields_remaining).to eq(42)
+      expect(grid.flags_remaining).to eq(0)
+      expect(grid.cleared?).to eq(false)
+      expect(grid.render(2, 2)).to eq([
+        "░░░░░░░░░░\n",
+        "░XF2░░░░░░\n",
+        "░24F░░░░░░\n",
+        "░*3F░░░░░░\n",
+        "░░░░░░░░░░\n"
       ].join)
     end
   end

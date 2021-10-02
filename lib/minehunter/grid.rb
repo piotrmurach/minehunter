@@ -253,8 +253,23 @@ module Minehunter
     # @api public
     def count_mines_next_to(x, y)
       fields_next_to(x, y).reduce(0) do |acc, cords|
-        acc += 1 if field_at(*cords).mine?
-        acc
+        acc + (field_at(*cords).mine? ? 1 : 0)
+      end
+    end
+
+    # Total number of flags next to a given position
+    #
+    # @param [Integer] x
+    #   the x coordinate
+    # @param [Integer] y
+    #   the y coordinate
+    #
+    # @return [Integer]
+    #
+    # @api public
+    def count_flags_next_to(x, y)
+      fields_next_to(x, y).reduce(0) do |acc, cords|
+        acc + (field_at(*cords).flag? ? 1 : 0)
       end
     end
 
@@ -278,6 +293,8 @@ module Minehunter
         return true
       end
 
+      return uncover_around(x, y) unless field.cover?
+
       mine_count = count_mines_next_to(x, y)
       field.mine_count = mine_count
       flag(x, y) if field.flag?
@@ -287,12 +304,43 @@ module Minehunter
       if mine_count.zero?
         fields_next_to(x, y) do |close_x, close_y|
           close_field = field_at(close_x, close_y)
-          if close_field.cover? && !close_field.mine?
-            uncover(close_x, close_y)
-          end
+          next if !close_field.cover? || close_field.mine?
+
+          uncover(close_x, close_y)
         end
       end
       false
+    end
+
+    # Uncover fields around numbered field matching flags count
+    #
+    # @param [Integer] x
+    #   the x coordinate
+    # @param [Integer] y
+    #   the y coordinate
+    #
+    # @return [Boolean]
+    #   whether or not uncovered a mine
+    #
+    # @api public
+    def uncover_around(x, y)
+      field = field_at(x, y)
+      uncovered_mine = false
+
+      if count_flags_next_to(x, y) != field.mine_count
+        return uncovered_mine
+      end
+
+      fields_next_to(x, y) do |close_x, close_y|
+        close_field = field_at(close_x, close_y)
+        next if !close_field.cover? || close_field.flag?
+
+        uncover(close_x, close_y)
+
+        uncovered_mine = true if close_field.mine?
+      end
+
+      uncovered_mine
     end
 
     # Uncover all mines without a flag
