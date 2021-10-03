@@ -91,7 +91,7 @@ RSpec.describe Minehunter::Game do
     ].join.inspect)
   end
 
-  it "uncovers a field with a space key and quits" do
+  it "uncovers a field with a space key and quits with ESC" do
     seed = [1, 1, 2, 3, 3, 4].to_enum
     randomiser = ->(_val) { seed.next }
     game = described_class.new(width: 10, height: 5, mines_limit: 3,
@@ -99,7 +99,7 @@ RSpec.describe Minehunter::Game do
                                input: input, output: output, env: env,
                                decorator: decorator, randomiser: randomiser)
 
-    input << "\n" << " " << "q"
+    input << "\n" << " " << "\e"
     input.rewind
 
     game.run

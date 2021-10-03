@@ -15,7 +15,7 @@ module Minehunter
     # The keys to exit game
     #
     # @api private
-    EXIT_KEYS = [?\C-x, "q"].freeze
+    EXIT_KEYS = [?\C-x, "q", "\e"].freeze
 
     # The terminal cursor clearing and positioning
     #
@@ -217,6 +217,7 @@ module Minehunter
       @output.print cursor.move_to(0, 0)
       @stop = true
     end
+    alias keyescape keyctrl_x
 
     # Uncover a field
     #
