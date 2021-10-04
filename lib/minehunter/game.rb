@@ -103,9 +103,7 @@ module Minehunter
       @reader.subscribe(self)
 
       until @stop
-        @output.print cursor.move_to(0, 0) + cursor.clear_line +
-                      render_status_box +
-                      cursor.move_to(0, 2) + render_grid_box
+        @output.print render_status_box + render_grid_box
         @reader.read_keypress
       end
     ensure
