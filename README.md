@@ -12,7 +12,23 @@
 [codeclimate]: https://codeclimate.com/github/piotrmurach/minehunter/maintainability
 [coverage]: https://coveralls.io/github/piotrmurach/minehunter
 
-> Terminal mine hunting game.
+> Terminal mine hunting game built with [TTY toolkit components](https://ttytoolkit.org/components/).
+
+Minehunter is a terminal puzzle game inspired by the classic "Minesweeper".
+
+To win a game, a player needs to uncover all the fields inside the grid that don't contain mines. Uncovering a field with a mine immediately ends the game. When an uncovered field has no mine present, it can either be empty or show a number. The number specifies how many mines are in surrounding fields. Armed with this knowledge, the player can deduce fields safe to uncover and use a flag to mark the ones that hide a mine. The number of available flags matches the number of the randomly placed mines. But, the player is not required to use any flags to win the game.
+
+There are three preconfigured difficulty levels:
+
+* Easy - 9x9 with 10 mines
+* Medium - 16x16 with 40 mines
+* Hard - 32x32 with 99 mines
+
+The player can also create a custom grid with an arbitrary number of mines.
+
+Here is an example of playing on a 20x10 grid with 30 mines:
+
+![Playing Minehunter](https://github.com/piotrmurach/minehunter/raw/master/assets/minehunter_custom_grid_play.png)
 
 ## Installation
 
@@ -32,10 +48,34 @@ Or install it yourself as:
 
 ## Usage
 
-Start the game:
+To start the game, run:
 
-```
+```shell
 $ minehunter
+```
+
+Alternatively, run an alias:
+
+```shell
+$ minehunt
+```
+
+To change difficulty level use `--level` or `-l` option with `easy`, `medium` or `hard`:
+
+```shell
+$ minehunter --level easy
+```
+
+To customise the number of grid columns use  `--cols` or `-c` option. Likewise, specify  `--rows` or `-r` option to set the number of grid rows. For example, to play a game on a grid with `20` columns and `15` rows do:
+
+```shell
+$ minehunter --cols 20 --rows 15
+```
+
+Use `--mines` or `-m` option to set number of mines to be randomly placed on a grid:
+
+```shell
+$ minehunter --mines 25
 ```
 
 ## Development
