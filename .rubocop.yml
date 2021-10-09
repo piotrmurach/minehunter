@@ -5,7 +5,7 @@ Layout/FirstArrayElementIndentation:
   Enabled: false
 
 Layout/LineLength:
-  Max: 82
+  Max: 80
 
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
@@ -23,8 +23,25 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Max: 1500
 
+Metrics/CyclomaticComplexity:
+  Max: 8
+
 Metrics/MethodLength:
   Max: 20
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - x
+    - y
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: err
 
 Style/AccessorGrouping:
   Enabled: false
@@ -40,6 +57,9 @@ Style/CommentedKeyword:
 
 Style/LambdaCall:
   EnforcedStyle: braces
+
+Style/NumericPredicate:
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
