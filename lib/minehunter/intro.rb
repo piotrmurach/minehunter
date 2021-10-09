@@ -6,18 +6,18 @@ module Minehunter
   # @api private
   class Intro
     INTRO = [
-      " ,-*",
-      "(_) Minehunter",
+      "     ,-*",
+      "    (_) Minehunter",
       "",
-      "Movement:",
+      "Movement",
       "     [↑]        [w]",
       "  [←][↓][→]  [a][s][d]",
       "",
-      "Actions:",
-      "  f - toggle flag",
-      "  space - uncover field",
-      "  r - restart game",
-      "  q - quit game",
+      "Actions",
+      "  Toggle Flag  f",
+      "  Uncover      space",
+      "  Restart      r",
+      "  Quit         q",
       "",
       "Press any key to start!"
     ].freeze

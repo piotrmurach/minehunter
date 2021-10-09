@@ -3,20 +3,20 @@
 RSpec.describe Minehunter::Intro do
   it "renders intro screen content" do
     expect(described_class.render).to eq([
-       " ,-*",
-       "(_) Minehunter",
+       "     ,-*",
+       "    (_) Minehunter",
        "",
-       "Movement:",
+       "Movement",
        "     [↑]        [w]",
        "  [←][↓][→]  [a][s][d]",
        "",
-       "Actions:",
-       "  f - toggle flag",
-       "  space - uncover field",
-       "  r - restart game",
-       "  q - quit game",
+       "Actions",
+       "  Toggle Flag  f",
+       "  Uncover      space",
+       "  Restart      r",
+       "  Quit         q",
        "",
-       "Press any key to start!",
+       "Press any key to start!"
     ].join("\n"))
   end
 
