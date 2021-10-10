@@ -136,7 +136,8 @@ module Minehunter
         left: @left,
         width: @width + 4,
         padding: [0, 1],
-        border: {bottom: false}
+        border: {bottom: false},
+        align: :center
       )
     end
 
