@@ -168,7 +168,7 @@ module Minehunter
       if @lost
         "GAME OVER"
       elsif @grid.cleared?
-        "WINNER"
+        "YOU WIN"
       else
         "Flags #{@grid.flags_remaining}"
       end
